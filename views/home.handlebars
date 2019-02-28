@@ -1,0 +1,42 @@
+<h1>Add A Customer</h1>
+<form action="/customers" method="post">
+  <label for="fname">First Name:</label>
+  <input id="fname" type="text" name="fname">
+  <label for="lname">Last Name:</label>
+  <input id="lname" type="text" name="lname">
+  <input type="submit" name="AddCustomer" value = "Add Customer">
+</form>
+
+
+<table>
+	<thead>
+		<th>Customer Name</th>
+		<th>Order Number</th>
+    <th>Food Ordered</th>
+		<th>Total Price</th>
+	</thead>
+  <tbody>
+  	{{#each results}}
+    <tr>
+      <td>{{CustomerName}}</td>
+      <td>{{OrderNumber}}</td>
+      <td>{{FoodOrdered}}</td>
+      <td>{{TotalPrice}}</td>
+      <td>
+      <td>
+        <form action = "/customers" method="post">
+          <input type="hidden" name="id" value="{{customer_id}}">
+          <input type="submit" name="Edit" value="Edit">
+        </form>
+      </td>
+      <td>
+        <form action = "/customers" method="post">
+          <input type="hidden" name="id" value="{{customer_id}}">
+          <input type="submit" name="Delete" value="Delete">
+        </form>
+      </td>
+  	</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
