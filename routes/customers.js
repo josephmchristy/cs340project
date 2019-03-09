@@ -56,7 +56,6 @@ router.post('/', function(req, res, next){
   }
 
    if(req.body["Update"]){
-   		console.log("id is " + req.body.id);
 	    mysql.pool.query("UPDATE customers SET fname = ? WHERE customer_id = ?",
 	      [req.body.fname, req.body.id],
 	      function(err, result){
