@@ -22,6 +22,7 @@ router.get('/', function(req, res, next){
 
 router.post('/', function(req, res, next){
 	var mysql = req.app.get('mysql');
+
 	 if(req.body["Delete"]){
 	    mysql.pool.query("DELETE FROM customers WHERE customer_id = ?", req.body.id, function(err, result){
 	      if(err){
@@ -41,6 +42,31 @@ router.post('/', function(req, res, next){
 	    });
 	    res.redirect('/customers');
 	  }
+
+	if(req.body["Edit"]){
+		var context = {};
+   		mysql.pool.query("SELECT * FROM customers WHERE customer_id = ?", req.body.id, function(err, result){
+      		if(err){
+        		next(err);
+        		return;
+      		}
+    	context.results = result[0];
+    	res.render('edit', context);
+    });
+  }
+
+   if(req.body["Update"]){
+   		console.log("id is " + req.body.id);
+	    mysql.pool.query("UPDATE customers SET fname = ? WHERE customer_id = ?",
+	      [req.body.fname, req.body.id],
+	      function(err, result){
+	        if(err){
+	          next(err);
+	          return;
+	        }      
+      });
+	res.redirect('/customers');
+  }
 });
 
 module.exports = router;

@@ -19,16 +19,7 @@ app.use('/customers', customers);
 app.post("/", function(req, res, next){
   var context = {};
 
-  // if(req.body["Edit"]){
-  //   mysql.pool.query("SELECT * FROM customers WHERE id = ?", req.body.id, function(err, result){
-  //     if(err){
-  //       next(err);
-  //       return;
-  //     }
-  //     context.results = result[0];
-  //     res.render('edit', context);
-  //   });
-  // }
+
 
   // if(req.body["Update"]){
   //   mysql.pool.query("SELECT * FROM workouts WHERE id = ?", req.body.id, function(err, result){

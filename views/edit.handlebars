@@ -1,20 +1,8 @@
-<h1>Add An Order</h1>
-<form action="/" method="post">
+<h1>Edit A Customer</h1>
+<form action="/customers" method="post">
     Name:
-    <input type="text" name="exercise" id="exercise" placeholder="{{results.name}}" value="{{results.name}}">
+    <input type="text" name="fname" id="fname" placeholder="{{results.fname}}" value="{{results.fname}}">
 
-    Reps:
-    <input type="number" name="reps" id="reps" placeholder="{{results.reps}}" value="{{results.reps}}">
-
-    Weight:
-    <input type="number" name="weight" id="weight" placeholder="{{results.weight}}" value="{{results.weight}}">
-
-    Date:
-    <input type="date" name="date" id="date" placeholder="{{results.date}}" value="{{results.date}}">
-
-    Lbs:
-    <input type="lbs" name="lbs" id="lbs" placeholder="{{results.lbs}}" value="{{results.lbs}}">
-
-    <input type="hidden" name="id" value={{results.id}}>
+    <input type="hidden" name="id" value={{results.customer_id}}>
     <input type="submit" name="Update" value="Update" id="Update">
 </form>
