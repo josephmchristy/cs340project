@@ -2,6 +2,7 @@ var express = require("express"),
     mysql = require("./DBcon.js"),
     handlebars = require("express-handlebars").create({defaultLayout: "main"}),
     bodyParser = require('body-parser'),
+    methodOverride = require("method-override"),
     customers = require('./routes/customers.js'),
     employees = require('./routes/employees.js'),
     orders = require('./routes/orders.js');
@@ -15,6 +16,7 @@ app.set('mysql', mysql);
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(methodOverride('_method'));
 
 app.use('/customers', customers);
 app.use('/employees', employees);
