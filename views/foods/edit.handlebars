@@ -1,0 +1,19 @@
+<h1>Edit {{food.0.food}}</h1>
+<form action="/foods/{{food.0.food_id}}?_method=PUT" method="POST">
+  Name:
+  <input type="text" name="name" id="name" placeholder="{{food.0.food}}" value="{{food.0.food}}">
+  Calories:
+  <input type="number" name="calories" id="calories" placeholder="{{food.0.calories}}" value="{{food.0.calories}}">
+  Price:
+  <input type="number" name="price" id="price" placeholder="{{food.0.price}}" value="{{food.0.price}}">
+  Menus: <select name="menu_id">
+    <option selected="selected" value="{{food.0.menu_id}}">{{food.0.menu}} (Current Menu)</option>
+    {{#each menus}}
+    <option value="{{menu_id}}">{{name}}</option>
+    {{/each}}
+  </select><br>
+
+  <input type="hidden" name="current_menu_id" value={{food.0.menu_id}}>
+  <input type="hidden" name="food_id" value={{food.0.food_id}}>
+  <input type="submit" name="Update" value="Update" id="Update">
+</form>

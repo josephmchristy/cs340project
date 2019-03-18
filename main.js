@@ -5,7 +5,8 @@ var express = require("express"),
     methodOverride = require("method-override"),
     customers = require('./routes/customers.js'),
     employees = require('./routes/employees.js'),
-    orders = require('./routes/orders.js');
+    orders = require('./routes/orders.js'),
+    foods = require('./routes/foods.js');
 
 var app = express();
 
@@ -21,6 +22,7 @@ app.use(methodOverride('_method'));
 app.use('/customers', customers);
 app.use('/employees', employees);
 app.use('/orders', orders);
+app.use('/foods', foods);
 
 app.get('/', function(req, res, next){
   res.redirect('/customers');

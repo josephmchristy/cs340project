@@ -1,0 +1,42 @@
+<h1>Foods</h1>
+<table>
+	<thead>
+		<th>Name</th>
+		<th>Calories</th>
+		<th>Price</th>
+		<th>Menu</th>
+	</thead>
+  <tbody>
+  	{{#each foods}}
+    <tr>
+      <td>{{food}}</td>
+      <td>{{calories}}</td>
+      <td>{{price}}</td>
+      <td>{{menu}}</td>
+      <td>
+        <a href="/foods/{{food_id}}/edit?menu_id={{menu_id}}">Edit</a>
+      </td>
+      <td>
+        <form action = "/foods/{{food_id}}?_method=DELETE" method="POST">
+          <input type="hidden" name="food_id" value="{{food_id}}">
+          <input type="submit" name="Delete" value="Delete">
+        </form>
+      </td>
+  	</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+<h2>Add A Food</h2>
+<form action="/foods" method="post">
+  Name: <input id="name" type="text" name="name"><br>
+  Calories: <input id="calories" type="number" name="calories"><br>
+  Price: <input id="price" type="number" name="price"><br>
+  Menu: <select name="menu_id">
+    {{#each menus}}
+    <option value="{{menu_id}}">{{name}}</option>
+    {{/each}}
+  </select><br>
+  <input type="submit" name="AddFood" value = "Add Food">
+</form>

@@ -86,7 +86,6 @@ router.get('/:id/edit', function(req, res, next){
 	function complete (){
 		callbackCount++;
 		if(callbackCount >= 2){
-			console.log(context.roles);
 			res.render('employees/edit', context);
 		}
 	}
