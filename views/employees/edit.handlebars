@@ -1,10 +1,14 @@
-<h1>Edit Employee</h1>
+<h1>Edit {{employee.fname}} {{employee.lname}}</h1>
 <form action="/employees/{{employee.employee_id}}?_method=PUT" method="POST">
   Name:
   <input type="text" name="fname" id="fname" placeholder="{{employee.fname}}" value="{{employee.fname}}">
   <input type="text" name="lname" id="lname" placeholder="{{employee.lname}}" value="{{employee.lname}}">
-  Role:
-  <input type="text" name="roleID" id="roleID" placeholder="{{employee.role_id}}" value="{{employee.role_id}}">
+  Role: <select name="roleID">
+    <option selected="selected" value="{{employee.role_id}}">{{employee.title}} (Current Role)</option>
+    {{#each roles}}
+    <option value="{{role_id}}">{{title}}</option>
+    {{/each}}
+  </select><br>
 
   <input type="hidden" name="id" value={{employee.employee_id}}>
   <input type="submit" name="Update" value="Update" id="Update">

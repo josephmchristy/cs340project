@@ -1,4 +1,4 @@
-<h1>Edit A Customer</h1>
+<h1>Edit {{customer.fname}} {{customer.lname}}</h1>
 <form action="/customers/{{customer.customer_id}}?_method=PUT" method="POST">
     Name:
     <input type="text" name="fname" id="fname" placeholder="{{customer.fname}}" value="{{customer.fname}}">

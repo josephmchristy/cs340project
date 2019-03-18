@@ -6,7 +6,7 @@ router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
 function getEmployees(res, mysql, context, complete){
-	mysql.pool.query("SELECT CONCAT(E.fname, ' ', E.lname) AS EmployeeName, R.title AS EmployeeTitle, E.employee_id FROM employees E INNER JOIN roles R ON E.role_id = R.role_id;",
+	mysql.pool.query("SELECT CONCAT(E.fname, ' ', E.lname) AS EmployeeName, R.title AS EmployeeTitle, E.employee_id, R.role_id FROM employees E INNER JOIN roles R ON E.role_id = R.role_id;",
 	function(err, rows, fields){
 		if(err){
 			res.write(JSON.stringify(err));
@@ -18,7 +18,7 @@ function getEmployees(res, mysql, context, complete){
 }
 
 function getEmployee(res, mysql, context, complete, employeeID){
-	mysql.pool.query("SELECT * FROM employees WHERE employee_id = ?",
+	mysql.pool.query("SELECT * FROM employees E INNER JOIN roles R ON E.role_id = R.role_id WHERE employee_id = ?",
 	employeeID,
 	function(err, result){
 		if(err){
@@ -26,6 +26,18 @@ function getEmployee(res, mysql, context, complete, employeeID){
 			return;
 		}
 		context.employee = result[0];
+		complete();
+	});
+}
+
+function getRoles(res, mysql, context, complete){
+	mysql.pool.query("SELECT * FROM roles;",
+	function(err, result){
+		if(err){
+			next(err);
+			return;
+		}
+		context.roles = result;
 		complete();
 	});
 }
@@ -69,9 +81,11 @@ router.get('/:id/edit', function(req, res, next){
 	var callbackCount = 0;
 	var employeeID = req.params.id;
 	getEmployee(res, mysql, context, complete, employeeID);
+	getRoles(res, mysql, context, complete);
 	function complete (){
 		callbackCount++;
-		if(callbackCount >= 1){
+		if(callbackCount >= 2){
+			console.log(context.roles);
 			res.render('employees/edit', context);
 		}
 	}
