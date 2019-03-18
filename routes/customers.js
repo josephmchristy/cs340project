@@ -102,7 +102,7 @@ router.get('/:id/edit', function(req, res, next){
 });
 
 //UPDATE - updates customer
-router.put("/:id", function(req,res){
+router.put('/:id', function(req,res){
 	var mysql = req.app.get('mysql');
 	mysql.pool.query("UPDATE customers SET fname = ?, lname = ? WHERE customer_id = ?",
 	[req.body.fname, req.body.lname, req.body.id],

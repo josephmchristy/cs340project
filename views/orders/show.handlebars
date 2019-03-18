@@ -1,0 +1,40 @@
+<h1>{{orders.1.CustomerName}}'s Orders</h1>
+<table>
+    <thead>
+        <th>Order Number</th>
+        <th>Food Ordered</th>
+        <th>Total Price</th>
+    </thead>
+  <tbody>
+    {{#each orders}}
+    <tr>
+      <td>{{OrderNumber}}</td>
+      <td>{{FoodOrdered}}</td>
+      <td>{{TotalPrice}}</td>
+      <td>
+        <a href="/orders/{{OrderNumber}}/edit">Edit Order</a>
+      </td>
+      <td>
+        <form action = "/orders/delete/{{OrderNumber}}?_method=DELETE" method="POST">
+          <input type="hidden" name="customer_id" value="{{customer_id}}">
+          <input type="hidden" name="order_id" value="{{OrderNumber}}">
+          <input type="submit" name="Delete" value="Delete Order">
+        </form>
+      </td>
+    </td>
+    </tr>
+    {{else}}
+      <h2>No orders</h2>
+    {{/each}}
+  </tbody>
+</table>
+<h2>Add A New Order</h2>
+<form action="/orders" method="POST">
+    Food: <select name="food_id">
+        {{#each foods}}
+        <option value="{{food_id}}">{{food}}</option>
+        {{/each}}
+    </select><br>
+  <input type="hidden" name="customer_id" value="{{orders.1.customer_id}}">
+  <input type="submit" name="AddOrder" value = "Add New Order">
+</form>
