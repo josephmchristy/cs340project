@@ -1,0 +1,8 @@
+<h1>Edit A Customer</h1>
+<form action="/customers" method="post">
+    Name:
+    <input type="text" name="fname" id="fname" placeholder="{{customer.fname}}" value="{{customer.fname}}">
+	<input type="text" name="lname" id="lname" placeholder="{{customer.lname}}" value="{{customer.lname}}">
+    <input type="hidden" name="id" value={{customer.customer_id}}>
+    <input type="submit" name="Update" value="Update" id="Update">
+</form>

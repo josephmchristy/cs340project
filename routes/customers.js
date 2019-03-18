@@ -6,18 +6,66 @@ var router = express.Router();
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
-router.get('/', function(req, res, next){
+function getCustomer(res, mysql, context, complete, customerID){
+	mysql.pool.query("SELECT * FROM customers WHERE customer_id = ?", customerID, 
+	function(err, result){
+  		if(err){
+    		next(err);
+    		return;
+  		}
+		context.customer = result[0];
+		complete();
+	});
+}
+
+function getCustomers(res, mysql, context, complete){
+	mysql.pool.query("SELECT CONCAT(C.fname, ' ', C.lname) AS CustomerName, O.order_id AS OrderNumber, FP.TotalPrice, C.customer_id FROM customers C LEFT JOIN orders O on O.customer_id = C.customer_id LEFT JOIN food_orders FO on FO.order_id = O.order_id LEFT JOIN food F on F.food_id = FO.food_id LEFT JOIN (SELECT O.order_id, SUM(F.price) AS TotalPrice from orders O INNER JOIN food_orders FO ON FO.order_id = O.order_id INNER JOIN food F on F.food_id = FO.food_id GROUP BY order_id) FP on FP.order_id = O.order_id GROUP BY OrderNumber, CustomerName;",
+	function(err, rows, fields){
+	    if(err){
+	      res.write(JSON.stringify(err));
+	      res.end();
+	    }
+	    context.customers = rows;
+	    complete();
+	});
+}
+
+function getCustomerById(res, mysql, context, complete, customerID){
+	mysql.pool.query("SELECT CONCAT(C.fname, ' ', C.lname) AS CustomerName, O.order_id AS OrderNumber, FP.TotalPrice, C.customer_id FROM customers C LEFT JOIN orders O on O.customer_id = C.customer_id LEFT JOIN food_orders FO on FO.order_id = O.order_id LEFT JOIN food F on F.food_id = FO.food_id LEFT JOIN (SELECT O.order_id, SUM(F.price) AS TotalPrice from orders O INNER JOIN food_orders FO ON FO.order_id = O.order_id INNER JOIN food F on F.food_id = FO.food_id GROUP BY order_id) FP on FP.order_id = O.order_id WHERE C.customer_id = ? GROUP BY OrderNumber, CustomerName;",
+	[customerID], function(err, rows, fields){
+		if(err){
+			res.write(JSON.stringify(err));
+			res.end();
+		}
+		context.orders = rows;
+		complete();
+	});
+}
+
+function getFoods(res, mysql, context, complete){
+	mysql.pool.query("SELECT F.name AS food, M.name AS menu, F.food_id FROM food F INNER JOIN food_menu FM ON FM.food_id = F.food_id INNER JOIN menus M on M.menu_id = FM.menu_id ORDER BY M.name DESC;",
+	function(err, rows, fields){
+		if(err){
+			res.write(JOSN.stringify(err));
+			res.end();
+		}
+		context.foods = rows;
+		complete();
+	});
+}
+
+router.get('/', function(req, res){
+  var callbackCount = 0;
   var context = {};
   var mysql = req.app.get('mysql');
-  mysql.pool.query("SELECT CONCAT(C.fname, ' ', C.lname) AS CustomerName, O.order_id AS OrderNumber, F.name AS FoodOrdered, FP.TotalPrice, C.customer_id FROM customers C LEFT JOIN orders O on O.customer_id = C.customer_id LEFT JOIN food_orders FO on FO.order_id = O.order_id LEFT JOIN food F on F.food_id = FO.food_id LEFT JOIN (SELECT O.order_id, SUM(F.price) AS TotalPrice from orders O INNER JOIN food_orders FO ON FO.order_id = O.order_id INNER JOIN food F on F.food_id = FO.food_id GROUP BY order_id) FP on FP.order_id = O.order_id GROUP BY OrderNumber, CustomerName, FoodOrdered;",
-   function(err, rows, fields){
-    if(err){
-      next(err);
-      return;
-    }
-    context.results = rows;
-    res.render("home", context);
-  });
+  getCustomers(res, mysql, context, complete);
+  getFoods(res, mysql, context, complete);
+  function complete(){
+  	callbackCount++;
+  	if(callbackCount >= 2){
+  		res.render('customers', context);
+  	}
+  }
 });
 
 router.post('/', function(req, res, next){
@@ -45,19 +93,20 @@ router.post('/', function(req, res, next){
 
 	if(req.body["Edit"]){
 		var context = {};
-   		mysql.pool.query("SELECT * FROM customers WHERE customer_id = ?", req.body.id, function(err, result){
-      		if(err){
-        		next(err);
-        		return;
-      		}
-    	context.results = result[0];
-    	res.render('edit', context);
-    });
-  }
+		var callbackCount = 0;
+		var customerID = req.body.id;
+   		getCustomer(res, mysql, context, complete, customerID);
+		function complete(){
+			callbackCount++;
+		  	if(callbackCount >= 1){
+		  		res.render('edit-customer', context);
+		  	}
+		 }
+  	}
 
    if(req.body["Update"]){
-	    mysql.pool.query("UPDATE customers SET fname = ? WHERE customer_id = ?",
-	      [req.body.fname, req.body.id],
+	    mysql.pool.query("UPDATE customers SET fname = ?, lname = ? WHERE customer_id = ?",
+	      [req.body.fname, req.body.lname, req.body.id],
 	      function(err, result){
 	        if(err){
 	          next(err);
@@ -67,5 +116,8 @@ router.post('/', function(req, res, next){
 	res.redirect('/customers');
   }
 });
+
+
+
 
 module.exports = router;

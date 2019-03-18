@@ -1,0 +1,41 @@
+<h1>Add An Employee</h1>
+<form action="/employees" method="post">
+  <label for="fname">First Name:</label>
+  <input id="fname" type="text" name="fname">
+  <label for="lname">Last Name:</label>
+  <input id="lname" type="text" name="lname">
+  <label for="roleID">Role ID:</label>
+  <input id="roleID" type="text" name="roleID">
+  <input type="submit" name="AddEmployee" value = "Add Employee">
+</form>
+
+
+<table>
+	<thead>
+		<th>Employee Name</th>
+		<th>Employee Title</th>
+    <th>Manager ID</th>
+	</thead>
+  <tbody>
+  	{{#each results}}
+    <tr>
+      <td>{{EmployeeName}}</td>
+      <td>{{EmployeeTitle}}</td>
+      <td>{{ManagerID}}</td>
+      <td>
+        <form action = "/employees" method="post">
+          <input type="hidden" name="id" value="{{employee_id}}">
+          <input type="submit" name="Edit" value="Edit">
+        </form>
+      </td>
+      <td>
+        <form action = "/employees" method="post">
+          <input type="hidden" name="id" value="{{employee_id}}">
+          <input type="submit" name="Delete" value="Delete">
+        </form>
+      </td>
+  	</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
