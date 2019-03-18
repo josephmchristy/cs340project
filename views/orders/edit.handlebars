@@ -1,5 +1,5 @@
-<h1>Edit Order {{items.1.OrderNumber}}</h1>
-<h2>Total Price: {{items.1.TotalPrice}}</h2>
+<h1>Edit Order {{items.0.OrderNumber}}</h1>
+<h2>Total Price: {{items.0.TotalPrice}}</h2>
 <table>
     <thead>
         <th>Food Ordered</th>
@@ -21,8 +21,8 @@
     </tr>
     {{/each}}
     <h3>Add Food To Order</h3>
-    <form action = "/orders/{{items.1.OrderNumber}}?_method=PUT" method="POST">
-      <input type="hidden" name="order_id" value="{{items.1.OrderNumber}}">
+    <form action = "/orders/{{items.0.OrderNumber}}?_method=PUT" method="POST">
+      <input type="hidden" name="order_id" value="{{items.0.OrderNumber}}">
       Food: <select name="food_id">
         {{#each foods}}
         <option value="{{food_id}}">{{food}}</option>

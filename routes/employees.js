@@ -51,10 +51,11 @@ router.get('/', function(req, res){
   var callbackCount = 0;
   var context = {};
   var mysql = req.app.get('mysql');
+	getRoles(res, mysql, context, complete);
   getEmployees(res, mysql, context, complete);
   function complete(){
   	callbackCount++;
-  	if(callbackCount >= 1){
+  	if(callbackCount >= 2){
   		res.render('employees/index', context);
   	}
   }

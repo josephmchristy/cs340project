@@ -1,23 +1,8 @@
 <h1>Orders</h1>
-<h2>Add A New Order</h2>
-<form action="/orders" method="POST">
-		Customer: <select name="customer_id">
-				{{#each customers}}
-				<option value="{{customer_id}}">{{CustomerName}}</option>
-				{{/each}}
-		</select><br>
-    Food: <select name="food_id">
-        {{#each foods}}
-        <option value="{{food_id}}">{{food}}</option>
-        {{/each}}
-    </select><br>
-  <input type="submit" name="AddOrder" value = "Add New Order">
-</form>
 <table>
 	<thead>
 		<th>Customer Name</th>
 		<th>Order Number</th>
-    <th>Food Ordered</th>
 		<th>Total Price</th>
 	</thead>
   <tbody>
@@ -25,10 +10,9 @@
     <tr>
       <td>{{CustomerName}}</td>
       <td>{{OrderNumber}}</td>
-      <td>{{FoodOrdered}}</td>
-      <td>{{TotalPrice}}</td>
+      <td>${{TotalPrice}}</td>
       <td>
-        <a href="/orders/{{OrderNumber}}/edit">Edit Order</a>
+        <a href="/orders/{{OrderNumber}}/edit">View/Edit Order</a>
       </td>
 			<td>
         <form action = "/orders/delete/{{OrderNumber}}?_method=DELETE" method="POST">
@@ -42,3 +26,18 @@
     {{/each}}
   </tbody>
 </table>
+
+<h2>Add An Order</h2>
+<form action="/orders" method="POST">
+		Customer: <select name="customer_id">
+				{{#each customers}}
+				<option value="{{customer_id}}">{{CustomerName}}</option>
+				{{/each}}
+		</select><br>
+    Food: <select name="food_id">
+        {{#each foods}}
+        <option value="{{food_id}}">{{food}}</option>
+        {{/each}}
+    </select><br>
+  <input type="submit" name="AddOrder" value = "Add New Order">
+</form>

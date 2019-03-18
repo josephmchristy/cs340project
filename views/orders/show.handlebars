@@ -1,4 +1,4 @@
-<h1>{{orders.1.CustomerName}}'s Orders</h1>
+<h1>{{customer.fname}} {{customer.lname}}'s Orders</h1>
 <table>
     <thead>
         <th>Order Number</th>
@@ -10,7 +10,7 @@
     <tr>
       <td>{{OrderNumber}}</td>
       <td>{{FoodOrdered}}</td>
-      <td>{{TotalPrice}}</td>
+      <td>${{TotalPrice}}</td>
       <td>
         <a href="/orders/{{OrderNumber}}/edit">Edit Order</a>
       </td>
@@ -28,13 +28,13 @@
     {{/each}}
   </tbody>
 </table>
-<h2>Add A New Order</h2>
+<h2>Add A New Order for {{customer.fname}} {{customer.lname}}</h2>
 <form action="/orders" method="POST">
     Food: <select name="food_id">
         {{#each foods}}
         <option value="{{food_id}}">{{food}}</option>
         {{/each}}
     </select><br>
-  <input type="hidden" name="customer_id" value="{{orders.1.customer_id}}">
+  <input type="hidden" name="customer_id" value="{{customer.customer_id}}">
   <input type="submit" name="AddOrder" value = "Add New Order">
 </form>

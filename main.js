@@ -22,6 +22,9 @@ app.use('/customers', customers);
 app.use('/employees', employees);
 app.use('/orders', orders);
 
+app.get('/', function(req, res, next){
+  res.redirect('/customers');
+});
 
 app.use(function(req,res){
   res.type('text/plain');

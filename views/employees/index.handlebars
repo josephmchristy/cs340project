@@ -1,12 +1,4 @@
-<h1>Add An Employee</h1>
-<form action="/employees" method="POST">
-  First Name: <input id="fname" type="text" name="fname"><br>
-  Last Name: <input id="lname" type="text" name="lname"><br>
-  Role: <input id="roleID" type="text" name="roleID"><br />
-  <input type="submit" name="AddEmployee" value = "Add Employee">
-</form>
-
-
+<h1>Employees</h1>
 <table>
 	<thead>
 		<th>Employee Name</th>
@@ -31,3 +23,15 @@
     {{/each}}
   </tbody>
 </table>
+
+<h2>Add An Employee</h2>
+<form action="/employees" method="POST">
+  First Name: <input id="fname" type="text" name="fname"><br>
+  Last Name: <input id="lname" type="text" name="lname"><br>
+  Role: <select name="roleID">
+    {{#each roles}}
+    <option value="{{role_id}}">{{title}}</option>
+    {{/each}}
+  </select><br>
+  <input type="submit" name="AddEmployee" value = "Add Employee">
+</form>

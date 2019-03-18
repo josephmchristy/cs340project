@@ -7,7 +7,7 @@ router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
 function getAllOrders(res, mysql, context, complete, customerID){
-	mysql.pool.query("SELECT CONCAT(C.fname, ' ', C.lname) AS CustomerName, O.order_id AS OrderNumber, F.name AS FoodOrdered, FP.TotalPrice, C.customer_id, F.food_id FROM customers C LEFT JOIN orders O on O.customer_id = C.customer_id LEFT JOIN food_orders FO on FO.order_id = O.order_id LEFT JOIN food F on F.food_id = FO.food_id LEFT JOIN (SELECT O.order_id, SUM(F.price) AS TotalPrice from orders O INNER JOIN food_orders FO ON FO.order_id = O.order_id INNER JOIN food F on F.food_id = FO.food_id GROUP BY order_id) FP on FP.order_id = O.order_id;",
+	mysql.pool.query("SELECT CONCAT(C.fname, ' ', C.lname) AS CustomerName, O.order_id AS OrderNumber, F.name AS FoodOrdered, FP.TotalPrice, C.customer_id, F.food_id FROM customers C INNER JOIN orders O on O.customer_id = C.customer_id LEFT JOIN food_orders FO on FO.order_id = O.order_id LEFT JOIN food F on F.food_id = FO.food_id LEFT JOIN (SELECT O.order_id, SUM(F.price) AS TotalPrice from orders O INNER JOIN food_orders FO ON FO.order_id = O.order_id INNER JOIN food F on F.food_id = FO.food_id GROUP BY order_id) FP on FP.order_id = O.order_id GROUP BY OrderNumber;",
 	function(err, rows, fields){
 	    if(err){
 	      res.write(JSON.stringify(err));
@@ -68,6 +68,18 @@ function getCustomers(res, mysql, context, complete){
 	});
 }
 
+function getCustomer(res, mysql, context, complete, customerID){
+	mysql.pool.query("SELECT * FROM customers WHERE customer_id = ?", customerID,
+	function(err, result){
+		if(err){
+			next(err);
+			return;
+		}
+		context.customer = result[0];
+		complete();
+	});
+}
+
 //===================================
 // ORDER ROUTES
 //===================================
@@ -97,9 +109,10 @@ router.get('/:id', function(req, res, next){
   var customerID = req.params.id;
   getOrders(res, mysql, context, complete, customerID);
   getFoods(res, mysql, context, complete);
+	getCustomer(res, mysql, context, complete, customerID);
   function complete(){
   	callbackCount++;
-  	if(callbackCount >= 2){
+  	if(callbackCount >= 3){
   		res.render('orders/show', context);
   	}
   }
