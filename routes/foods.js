@@ -82,13 +82,11 @@ router.get('/:id/edit', function(req, res, next){
 	var callbackCount = 0;
 	var foodID = req.params.id;
   var menuID = req.query['menu_id'];
-  console.log(foodID, menuID);
 	getFood(res, mysql, context, complete, foodID, menuID);
 	getMenus(res, mysql, context, complete);
 	function complete (){
 		callbackCount++;
 		if(callbackCount >= 2){
-      console.log(context.food);
 			res.render('foods/edit', context);
 		}
 	}

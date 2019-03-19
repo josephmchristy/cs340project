@@ -30,11 +30,6 @@
 </table>
 <h2>Add A New Order for {{customer.fname}} {{customer.lname}}</h2>
 <form action="/orders" method="POST">
-    Food: <select name="food_id">
-        {{#each foods}}
-        <option value="{{food_id}}">{{food}}</option>
-        {{/each}}
-    </select><br>
   <input type="hidden" name="customer_id" value="{{customer.customer_id}}">
   <input type="submit" name="AddOrder" value = "Add New Order">
 </form>

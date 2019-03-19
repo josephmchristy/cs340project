@@ -7,7 +7,7 @@ router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
 function getAllOrders(res, mysql, context, complete, customerID){
-	mysql.pool.query("SELECT CONCAT(C.fname, ' ', C.lname) AS CustomerName, O.order_id AS OrderNumber, F.name AS FoodOrdered, FP.TotalPrice, C.customer_id, F.food_id FROM customers C INNER JOIN orders O on O.customer_id = C.customer_id LEFT JOIN food_orders FO on FO.order_id = O.order_id LEFT JOIN food F on F.food_id = FO.food_id LEFT JOIN (SELECT O.order_id, SUM(F.price) AS TotalPrice from orders O INNER JOIN food_orders FO ON FO.order_id = O.order_id INNER JOIN food F on F.food_id = FO.food_id GROUP BY order_id) FP on FP.order_id = O.order_id GROUP BY OrderNumber;",
+	mysql.pool.query("SELECT CONCAT(C.fname, ' ', C.lname) AS CustomerName, O.order_id AS OrderNumber, F.name AS FoodOrdered, FP.TotalPrice, C.customer_id, F.food_id FROM customers C INNER JOIN orders O on O.customer_id = C.customer_id LEFT JOIN food_orders FO on FO.order_id = O.order_id LEFT JOIN food F on F.food_id = FO.food_id LEFT JOIN (SELECT O.order_id, SUM(F.price) AS TotalPrice from orders O INNER JOIN food_orders FO ON FO.order_id = O.order_id INNER JOIN food F on F.food_id = FO.food_id GROUP BY order_id) FP on FP.order_id = O.order_id GROUP BY OrderNumber ORDER BY CustomerName;",
 	function(err, rows, fields){
 	    if(err){
 	      res.write(JSON.stringify(err));
@@ -19,7 +19,7 @@ function getAllOrders(res, mysql, context, complete, customerID){
 }
 
 function getOrders(res, mysql, context, complete, customerID){
-	mysql.pool.query("SELECT CONCAT(C.fname, ' ', C.lname) AS CustomerName, O.order_id AS OrderNumber, F.name AS FoodOrdered, FP.TotalPrice, C.customer_id, F.food_id FROM customers C LEFT JOIN orders O on O.customer_id = C.customer_id LEFT JOIN food_orders FO on FO.order_id = O.order_id LEFT JOIN food F on F.food_id = FO.food_id LEFT JOIN (SELECT O.order_id, SUM(F.price) AS TotalPrice from orders O INNER JOIN food_orders FO ON FO.order_id = O.order_id INNER JOIN food F on F.food_id = FO.food_id GROUP BY order_id) FP on FP.order_id = O.order_id WHERE C.customer_id = ? GROUP BY OrderNumber, CustomerName, FoodOrdered;",
+	mysql.pool.query("SELECT CONCAT(C.fname, ' ', C.lname) AS CustomerName, O.order_id AS OrderNumber, F.name AS FoodOrdered, FP.TotalPrice, C.customer_id, F.food_id FROM customers C LEFT JOIN orders O on O.customer_id = C.customer_id LEFT JOIN food_orders FO on FO.order_id = O.order_id LEFT JOIN food F on F.food_id = FO.food_id LEFT JOIN (SELECT O.order_id, SUM(F.price) AS TotalPrice from orders O INNER JOIN food_orders FO ON FO.order_id = O.order_id INNER JOIN food F on F.food_id = FO.food_id GROUP BY order_id) FP on FP.order_id = O.order_id WHERE C.customer_id = ? GROUP BY OrderNumber, CustomerName, FoodOrdered ORDER BY CustomerName;",
 	[customerID],
 	function(err, rows, fields){
 	    if(err){
@@ -32,7 +32,7 @@ function getOrders(res, mysql, context, complete, customerID){
 }
 
 function getOrder(res, mysql, context, complete, orderID){
-	mysql.pool.query("SELECT O.order_id AS OrderNumber, F.name AS FoodOrdered, F.price, FP.TotalPrice, F.food_id FROM orders O INNER JOIN food_orders FO on FO.order_id = O.order_id INNER JOIN food F on F.food_id = FO.food_id INNER JOIN (SELECT O.order_id, SUM(F.price) AS TotalPrice from orders O INNER JOIN food_orders FO ON FO.order_id = O.order_id INNER JOIN food F on F.food_id = FO.food_id GROUP BY order_id) FP on FP.order_id = O.order_id WHERE O.order_id = ?;",
+	mysql.pool.query("SELECT O.order_id AS OrderNumber, F.name AS FoodOrdered, F.price, FP.TotalPrice, F.food_id FROM orders O LEFT JOIN food_orders FO on FO.order_id = O.order_id LEFT JOIN food F on F.food_id = FO.food_id LEFT JOIN (SELECT O.order_id, SUM(F.price) AS TotalPrice from orders O INNER JOIN food_orders FO ON FO.order_id = O.order_id INNER JOIN food F on F.food_id = FO.food_id GROUP BY order_id) FP on FP.order_id = O.order_id WHERE O.order_id = ?;",
 	[orderID],
 	function(err, rows, fields){
 		if(err){
@@ -45,7 +45,7 @@ function getOrder(res, mysql, context, complete, orderID){
 }
 
 function getFoods(res, mysql, context, complete){
-	mysql.pool.query("SELECT F.name AS food, M.name AS menu, F.food_id FROM food F INNER JOIN food_menu FM ON FM.food_id = F.food_id INNER JOIN menus M on M.menu_id = FM.menu_id ORDER BY M.name DESC;",
+	mysql.pool.query("SELECT F.name AS food, M.name AS menu, F.food_id FROM food F INNER JOIN food_menu FM ON FM.food_id = F.food_id INNER JOIN menus M on M.menu_id = FM.menu_id GROUP BY food ORDER BY M.name DESC;",
 	function(err, rows, fields){
 		if(err){
 			res.write(JOSN.stringify(err));
@@ -121,9 +121,8 @@ router.get('/:id', function(req, res, next){
 //CREATE - add a new order
 router.post('/', function(req, res, next){
 	var mysql = req.app.get('mysql');
-	console.log(req.body.customer_id, req.body.food_id);
-	mysql.pool.query("INSERT INTO orders (customer_id) VALUES (?); INSERT INTO food_orders (order_id, food_id) VALUES (LAST_INSERT_ID(), ?)",
-	[req.body.customer_id, req.body.food_id],
+	mysql.pool.query("INSERT INTO orders (customer_id) VALUES (?)",
+	[req.body.customer_id],
 	function(err, result){
 		if(err){
 			next(err);
@@ -176,7 +175,7 @@ router.delete('/:id', function(req, res, next){
 			return;
 		}
 	});
-	res.redirect('/orders/');
+	res.redirect('/orders/' + req.body.order_id + '/edit');
 });
 
 //DELETE - deletes entire order

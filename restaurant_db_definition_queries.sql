@@ -138,27 +138,6 @@ INSERT INTO `food_orders` (`food_id`, `order_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `manager_employee`
---
-
-DROP TABLE IF EXISTS `manager_employee`;
-CREATE TABLE `manager_employee` (
-  `employee_id` int(11) NOT NULL,
-  `manager_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `manager_employee`
---
-
-INSERT INTO `manager_employee` (`employee_id`, `manager_id`) VALUES
-(1, 4),
-(2, 3),
-(3, 4);
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `menus`
 --
 
@@ -257,12 +236,6 @@ ALTER TABLE `food_orders`
   ADD KEY `fk_order` (`order_id`);
 
 --
--- Indexes for table `manager_employee`
---
-ALTER TABLE `manager_employee`
-  ADD PRIMARY KEY (`employee_id`,`manager_id`);
-
---
 -- Indexes for table `menus`
 --
 ALTER TABLE `menus`
@@ -344,13 +317,6 @@ ALTER TABLE `food_menu`
 ALTER TABLE `food_orders`
   ADD CONSTRAINT `fk_food` FOREIGN KEY (`food_id`) REFERENCES `food` (`food_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_order` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `manager_employee`
---
-ALTER TABLE `manager_employee`
-  ADD CONSTRAINT `fk_employee` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`employee_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_manager` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`employee_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `orders`
