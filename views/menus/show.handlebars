@@ -1,0 +1,15 @@
+<h1>{{menu.0.name}} Menu</h1>
+<table>
+	<thead>
+		<th>Food</th>
+	</thead>
+  <tbody>
+  	{{#each menu}}
+    <tr>
+      <td>{{food}}</td>
+  	</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+<a href="/menus/{{menu.0.menu_id}}/edit">Edit Menu</a>

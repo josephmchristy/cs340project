@@ -1,0 +1,37 @@
+<h1>Edit {{menu.0.name}} Menu</h1>
+<table>
+	<thead>
+		<th>Food</th>
+	</thead>
+  <tbody>
+  	{{#each menu}}
+    <tr>
+      <td>{{food}}</td>
+  	</td>
+    <td>
+      <form action = "/menus/{{menu_id}}/deleteEntry?_method=DELETE" method="POST">
+        <input type="hidden" name="menu_id" value="{{menu_id}}">
+        <input type="hidden" name="food_id" value="{{food_id}}">
+        <input type="submit" name="Delete" value="Delete Entry">
+      </form>
+    </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+<h2>Add Food</h2>
+<form action="/menus/addFood" method="POST">
+  Food: <select name="food_id">
+    {{#each foods}}
+    <option value="{{food_id}}">{{name}}</option>
+    {{/each}}
+  </select><br>
+  <input type="hidden" name="menu_id" value="{{menu.0.menu_id}}" />
+  <input type="submit" name="AddFood" value = "Add Food To Menu">
+</form>
+<h2>Change Menu Name</h2>
+<form action="/menus/{{menu.0.menu_id}}?_method=PUT" method="POST">
+  Name: <input type="text" name="name" value="{{menu.0.name}}" />
+  <input type="hidden" name="menu_id" value="{{menu.0.menu_id}}" />
+  <input type="submit" name="changeName" value = "Change Menu Name">
+</form>

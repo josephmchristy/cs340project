@@ -1,0 +1,29 @@
+<h1>Menus</h1>
+<table>
+	<thead>
+		<th>Name</th>
+	</thead>
+  <tbody>
+  	{{#each menus}}
+    <tr>
+      <td>{{name}}</td>
+      <td>
+        <a href="/menus/{{menu_id}}">View Details</a>
+      </td>
+      <td>
+        <form action = "/menus/{{menu_id}}?_method=DELETE" method="POST">
+          <input type="hidden" name="menu_id" value="{{menu_id}}">
+          <input type="submit" name="Delete" value="Delete Menu">
+        </form>
+      </td>
+  	</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+<h2>Add A Menu</h2>
+<form action="/menus" method="post">
+  Name: <input id="name" type="text" name="name"><br>
+  <input type="submit" name="AddMenu" value = "Add New Menu">
+</form>

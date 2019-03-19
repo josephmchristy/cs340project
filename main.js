@@ -6,7 +6,8 @@ var express = require("express"),
     customers = require('./routes/customers.js'),
     employees = require('./routes/employees.js'),
     orders = require('./routes/orders.js'),
-    foods = require('./routes/foods.js');
+    foods = require('./routes/foods.js'),
+    menus = require('./routes/menus.js');
 
 var app = express();
 
@@ -23,6 +24,7 @@ app.use('/customers', customers);
 app.use('/employees', employees);
 app.use('/orders', orders);
 app.use('/foods', foods);
+app.use('/menus', menus);
 
 app.get('/', function(req, res, next){
   res.redirect('/customers');
