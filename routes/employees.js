@@ -5,6 +5,10 @@ var express = require('express'),
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
+//===================================
+// GET FUNCTIONS
+//===================================
+
 function getEmployees(res, mysql, context, complete){
 	mysql.pool.query("SELECT CONCAT(E.fname, ' ', E.lname) AS EmployeeName, R.title AS EmployeeTitle, E.employee_id, R.role_id FROM employees E INNER JOIN roles R ON E.role_id = R.role_id;",
 	function(err, rows, fields){

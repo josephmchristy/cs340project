@@ -5,6 +5,10 @@ var express = require('express'),
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
+//===================================
+// GET FUNCTIONS
+//===================================
+
 function getMenus(res, mysql, context, complete){
 	mysql.pool.query("SELECT menu_id, name FROM menus;",
 	function(err, rows, fields){

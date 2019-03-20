@@ -5,6 +5,10 @@ var express = require('express'),
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
+//===================================
+// GET FUNCTIONS
+//===================================
+
 function getMenus(res, mysql, context, complete){
 	mysql.pool.query("SELECT M.menu_id, M.name, F.food_id, F.name AS food FROM menus M LEFT JOIN food_menu FM ON FM.menu_id = M.menu_id LEFT JOIN food F ON F.food_id = FM.food_id GROUP BY M.name ORDER BY M.name DESC;",
 	function(err, rows, fields){
